@@ -13,7 +13,7 @@ router.post("/login", async (req, res) => {
     req.session.user = {
       username: username,
       password: password,
-      role: result[0]["current_role()"],
+      role: result[0]["current_role()"].match(new RegExp("`(.*)`@`%`"))[1], // User role came in form `role_name`@`%` from the database. I used regex to parse it and store only the role name.
     };
     res.json({ message: "Logged in successfully" });
   } catch (e) {

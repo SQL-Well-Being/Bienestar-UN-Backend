@@ -8,9 +8,9 @@ import authRoutes from "./routes/auth.routes.js";
 import acompaniamientoIntegralRoutes from "./routes/acompaniamientoIntegral.routes.js";
 import culturaRoutes from "./routes/cultura.routes.js";
 import deporteRoutes from "./routes/deporte.routes.js";
-import saludRoutes from "./routes/acompaniamientoIntegral.routes.js";
+import saludRoutes from "./routes/salud.routes.js";
 import sistemaDeInformacionRoutes from "./routes/sistemaDeInformacion.routes.js";
-import socioeconomicoRoutes from "./routes/socioeconomico.js";
+import socioeconomicoRoutes from "./routes/socioeconomico.routes.js";
 
 const app = express();
 
