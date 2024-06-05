@@ -3,12 +3,12 @@ import { callProcedure } from "../libs/callProcedure.js";
 
 const router = Router();
 
-router.get("/estudiante/:id", async (req, res) => {
+router.get("/informacion-academica/estudiante/:id", async (req, res) => {
     try {
 
         if(req.session.user.role === "estudiante" && req.session.user.username !== req.params.id){
             // Students are not allowed to query another student's data
-            return res.status(401).json({message: "Not allowed to query someone elses information."});
+            return res.status(403).json({message: "Not allowed to query someone elses information."});
         }
 
         const [result] = await callProcedure(
