@@ -1,11 +1,16 @@
 import { Router } from "express";
 import { callProcedure } from "../libs/callProcedure.js";
+import onErrorResponse from "../libs/onErrorResponse.js";
 
 const router = Router();
 
 router.post('/citas-asesoria', async (req, res) => {
     try {
         const {DNI, tipo_cita, fecha} = req.body;
+
+        if(req.session.user.role === "estudiante" && req.session.user.username !== DNI){
+            return res.status(403).json({message: "Cannot schedule an appointment for someone else."});
+        }
         
         await callProcedure(
             req.session.user.username,
@@ -17,8 +22,8 @@ router.post('/citas-asesoria', async (req, res) => {
         res.status(201).json({message: "Appointment scheduled."});
 
     } catch (e) {
-        const  status = (e.sqlState === "45000" || e.sqlState === "23000") ? 400 : 500;
-        res.status(status).json({message:e.message});
+        
+        onErrorResponse(res, e);
     }
 });
 
@@ -35,7 +40,7 @@ router.delete('/citas-asesoria/:id', async (req, res) => {
 
     } catch (e) {
         
-        res.status(500).json({message: e.message});
+        onErrorResponse(res, e);
     }
 });
 

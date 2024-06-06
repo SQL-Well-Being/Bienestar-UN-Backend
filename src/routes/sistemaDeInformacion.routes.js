@@ -1,12 +1,13 @@
 import { Router } from "express";
 import { callProcedure } from "../libs/callProcedure.js";
+import onErrorResponse from "../libs/onErrorResponse.js";
 
 const router = Router();
 
-router.get("/informacion-academica/estudiante/:id", async (req, res) => {
+router.get("/informacion-academica/estudiante/:DNI", async (req, res) => {
     try {
 
-        if(req.session.user.role === "estudiante" && req.session.user.username !== req.params.id){
+        if(req.session.user.role === "estudiante" && req.session.user.username !== req.params.DNI){
             // Students are not allowed to query another student's data
             return res.status(403).json({message: "Not allowed to query someone elses information."});
         }
@@ -15,7 +16,7 @@ router.get("/informacion-academica/estudiante/:id", async (req, res) => {
             req.session.user.username,
             req.session.user.password,
             "obtener_info_academica_estudiante",
-            [req.params.id]
+            [req.params.DNI]
         );
         
 
@@ -32,12 +33,12 @@ router.get("/informacion-academica/estudiante/:id", async (req, res) => {
 
         } else {
             res.status(404);
-            res.json({message: `No students with id ${req.params.id}`});
+            res.json({message: `No students with DNI ${req.params.DNI}`});
         }
 
 
     } catch (e) {
-        res.status(500).json({message: e.message});
+        onErrorResponse(res, e);
     }
 });
 
