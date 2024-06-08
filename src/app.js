@@ -10,7 +10,7 @@ import culturaRoutes from "./routes/cultura.routes.js";
 import deporteRoutes from "./routes/deporte.routes.js";
 import saludRoutes from "./routes/salud.routes.js";
 import sistemaDeInformacionRoutes from "./routes/sistemaDeInformacion.routes.js";
-import socioeconomicoRoutes from "./routes/socioeconomico.routes.js";
+import socioeconomicoRoutes from "./routes/gestionSocioeconomica.routes.js";
 
 const app = express();
 
@@ -35,6 +35,6 @@ app.use("/cultura", auth, culturaRoutes);
 app.use("/deporte", auth, deporteRoutes);
 app.use("/salud", auth, saludRoutes);
 app.use("/sistema-de-informacion", auth, sistemaDeInformacionRoutes);
-app.use("/socioeconomico", auth, socioeconomicoRoutes);
+app.use("/gestion-socioeconomica", auth, socioeconomicoRoutes);
 
 export default app;
