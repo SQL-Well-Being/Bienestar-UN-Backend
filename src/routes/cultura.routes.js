@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { callProcedure } from "../libs/callProcedure.js";
+import callProcedure from "../libs/callProcedure.js";
 
 const router = Router();
 

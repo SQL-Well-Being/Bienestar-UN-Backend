@@ -1,13 +1,13 @@
 import { Router } from "express";
-import { callProcedure } from "../libs/callProcedure.js";
+import callProcedure from "../libs/callProcedure.js";
 
 const router = Router();
 
 router.get("/convocatorias-selecciones", async (req, res) => {
   try {
-    const [ result ] = await callProcedure(
-      req.session.user.username,
-      req.session.user.password,
+    const [result] = await callProcedure(
+      req.user.username,
+      req.user.password,
       "obtener_convocatorias_selecciones_deportivas"
     );
     res.json(result);
@@ -18,9 +18,9 @@ router.get("/convocatorias-selecciones", async (req, res) => {
 
 router.get("/convocatorias-selecciones/:id", async (req, res) => {
   try {
-    const [ result ] = await callProcedure(
-      req.session.user.username,
-      req.session.user.password,
+    const [result] = await callProcedure(
+      req.user.username,
+      req.user.password,
       "obtener_convocatoria_selecciones_deportivas",
       [req.params.id]
     );

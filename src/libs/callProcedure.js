@@ -1,6 +1,6 @@
 import { getConnection } from "../db.js";
 
-export async function callProcedure(username, password, procedureName, params = []) {
+export default async function callProcedure(username, password, procedureName, params = []) {
   let connection;
   try {
     connection = await getConnection(username, password);
