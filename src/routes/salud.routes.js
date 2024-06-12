@@ -42,7 +42,7 @@ router.get("/citas-individuales", async (req, res) => {
     const [result] = await callProcedure(
       req.user.username,
       req.user.password,
-      "consultar_info_citas_individuales",
+      req.query.solo_proximas ? "consultar_info_proximas_citas_individuales" : "consultar_info_citas_individuales",
       [req.query.est_DNI ? req.query.est_DNI : null]
     );
 
