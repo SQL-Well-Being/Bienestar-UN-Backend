@@ -17,6 +17,7 @@ router.post("/login", async (req, res) => {
       {
         username: username,
         password: password,
+        role: result[0]["current_role()"].match(new RegExp("`(.*)`@`%`"))[1],
       },
       TOKEN_SECRET,
       { expiresIn: "1d" }
@@ -36,6 +37,22 @@ router.post("/login", async (req, res) => {
       await connection.end();
     }
   }
+});
+
+router.get("/verify", async (req, res) => {
+  const { token } = req.cookies;
+
+  if (!token) return res.send(false);
+
+  jwt.verify(token, TOKEN_SECRET, async (e, user) => {
+    if (e) return res.sendStatus(401).json({ message: e.message });
+
+    return res.json({
+      username: user.username,
+      password: user.password,
+      role: user.role,
+    });
+  });
 });
 
 router.post("/logout", async (req, res) => {
