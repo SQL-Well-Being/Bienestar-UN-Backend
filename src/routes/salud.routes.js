@@ -108,7 +108,11 @@ router.get("/perfiles-de-salud/estudiante/:DNI", async (req, res) => {
     );
 
     if (result[0].length !== 0) {
-      res.json(result[0][0]);
+      const profile = result[0][0];
+      profile.perfsalud_discapacidades = profile.perfsalud_discapacidades ? profile.perfsalud_discapacidades.split("-") : [];
+      profile.perfsalud_id_discapacidades =profile.perfsalud_id_discapacidades ? profile.perfsalud_id_discapacidades.split(",").map(i => parseInt(i)) : [];
+
+      res.json(profile);
     } else {
       res
         .status(404)
@@ -116,6 +120,54 @@ router.get("/perfiles-de-salud/estudiante/:DNI", async (req, res) => {
     }
   } catch (e) {
     onErrorResponse(res, e);
+  }
+});
+
+router.put('/perfiles-de-salud/:id', async (req,res) => {
+  try {
+    const { perfsalud_peso, perfsalud_RH, perfsalud_estatura, perfsalud_id_discapacidades } = req.body;
+    const [result] = await callProcedure(
+      req.user.username,
+      req.user.password,
+      "discapacidades_perfil",
+      [req.params.id]
+    );
+    const former = result[0][0].perfsalud_id_discapacidades ?  result[0][0].perfsalud_id_discapacidades.split(",").map(i => parseInt(i)) : [];
+    const toRemove = former.filter((i) => perfsalud_id_discapacidades.indexOf(i) === -1);
+
+    toRemove.map( async (i) => {
+      await callProcedure(
+        req.user.username,
+        req.user.password,
+        "remover_discapacidad",
+        [i, req.params.id]
+      );
+    });
+
+    perfsalud_id_discapacidades.map(async (i) => {
+      try {
+        await callProcedure(
+          req.user.username,
+          req.user.password,
+          "agregar_discapacidad",
+          [i, req.params.id]
+        );
+      } catch (error) {
+        
+      }
+    });
+
+    await callProcedure(
+      req.user.username,
+      req.user.password,
+      "actualizar_perfil_salud",
+      [req.params.id, perfsalud_peso, perfsalud_RH, perfsalud_estatura]
+    );
+
+    res.json({message:"Profile updated"});
+
+  } catch (e) {
+    onErrorResponse(res,e);
   }
 });
 
