@@ -134,6 +134,7 @@ router.put('/perfiles-de-salud/:id', async (req,res) => {
     );
     const former = result[0][0].perfsalud_id_discapacidades ?  result[0][0].perfsalud_id_discapacidades.split(",").map(i => parseInt(i)) : [];
     const toRemove = former.filter((i) => perfsalud_id_discapacidades.indexOf(i) === -1);
+    const toAdd = perfsalud_id_discapacidades.filter((i) => former.indexOf(i) === -1);
 
     toRemove.map( async (i) => {
       await callProcedure(
@@ -144,17 +145,13 @@ router.put('/perfiles-de-salud/:id', async (req,res) => {
       );
     });
 
-    perfsalud_id_discapacidades.map(async (i) => {
-      try {
-        await callProcedure(
-          req.user.username,
-          req.user.password,
-          "agregar_discapacidad",
-          [i, req.params.id]
-        );
-      } catch (error) {
-        
-      }
+    toAdd.map(async (i) => {
+      await callProcedure(
+        req.user.username,
+        req.user.password,
+        "agregar_discapacidad",
+        [i, req.params.id]
+      );
     });
 
     await callProcedure(
