@@ -29,6 +29,6 @@ app.use("/cultura", auth, culturaRoutes);
 app.use("/deporte", auth, deporteRoutes);
 app.use("/salud", auth, saludRoutes);
 app.use("/sistema-de-informacion", auth, sistemaDeInformacionRoutes);
-app.use("/socioeconomico", auth, socioeconomicoRoutes);
+app.use("/gestion-socioeconomica", auth, socioeconomicoRoutes);
 
 export default app;

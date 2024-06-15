@@ -13,7 +13,7 @@ router.get("/convocatorias/periodo/:periodo", async (req, res) => {
       "consultar_convocatorias_gestion_periodo",
       [
         req.params.periodo,
-        req.query.solo_activas === undefined ? 0 : req.query.solo_activas,
+        req.query.solo_abiertas === undefined ? 0 : req.query.solo_abiertas,
       ]
     );
 
