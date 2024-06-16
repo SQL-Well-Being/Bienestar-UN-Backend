@@ -4,6 +4,32 @@ import onErrorResponse from "../libs/onErrorResponse.js";
 
 const router = Router();
 
+router.get("/estudiante/:DNI", async (req,res) => {
+  try {
+    if (
+      req.user.role === "estudiante" &&
+      req.user.username !== req.params.DNI
+    ) {
+      // Students are not allowed to query another student's data
+      return res
+        .status(403)
+        .json({ message: "Not allowed to query someone elses information." });
+    }
+
+    const [result] = await callProcedure(
+      req.user.username,
+      req.user.password,
+      "consultar_info_estudiante",
+      [req.params.DNI]
+    );
+
+    res.json(result[0][0]);
+    
+  } catch (e) {
+    onErrorResponse(res,e);
+  }
+});
+
 router.get("/informacion-academica/estudiante/:DNI", async (req, res) => {
   try {
     if (

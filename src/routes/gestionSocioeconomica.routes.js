@@ -5,6 +5,22 @@ import onErrorResponse from "../libs/onErrorResponse.js";
 const router = Router();
 
 /* Convocatorias */
+
+router.get("/convocatorias/inactivas", async (req,res) => {
+  try {
+    const [result] = await callProcedure(
+      req.user.username,
+      req.user.password,
+      "consultar_convocatorias_inactivas_gestion",
+      []
+    );
+
+    res.json(result[0]);
+  } catch (e) {
+    onErrorResponse(res, e);
+  }
+});
+
 router.get("/convocatorias/periodo/:periodo", async (req, res) => {
   try {
     const [result] = await callProcedure(
@@ -13,7 +29,7 @@ router.get("/convocatorias/periodo/:periodo", async (req, res) => {
       "consultar_convocatorias_gestion_periodo",
       [
         req.params.periodo,
-        req.query.solo_abiertas === undefined ? 0 : req.query.solo_abiertas,
+        req.query.activas === undefined ? 1 : req.query.activas,
       ]
     );
 
