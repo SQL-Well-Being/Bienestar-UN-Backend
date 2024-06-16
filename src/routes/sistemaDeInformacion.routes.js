@@ -68,4 +68,21 @@ router.get("/informacion-academica/estudiante/:DNI", async (req, res) => {
   }
 });
 
+
+router.get("/eventos-proximos", async (req,res) => {
+  try {
+    const [result] = await callProcedure(
+      req.user.username,
+      req.user.password,
+      "consultar_eventos_proximos",
+      []
+    );
+
+    res.json(result[0]);
+    
+  } catch (e) {
+    onErrorResponse(res,e);
+  }
+});
+
 export default router;

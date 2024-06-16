@@ -27,6 +27,30 @@ router.post("/citas-asesoria", async (req, res) => {
   }
 });
 
+router.get("/citas-asesoria", async (req, res) => {
+  try {
+    if (
+      req.user.role === "estudiante" &&
+      req.query.est_DNI !== req.user.username
+    ) {
+      return res
+        .status(403)
+        .json({ message: "Not allowed to query someone elses information." });
+    }
+
+    const [result] = await callProcedure(
+      req.user.username,
+      req.user.password,
+      req.query.solo_proximas ? "consultar_info_proximas_citas_asesoria" : "consultar_info_citas_asesoria",
+      [req.query.est_DNI ? req.query.est_DNI : null]
+    );
+
+    res.json(result[0]);
+  } catch (e) {
+    onErrorResponse(res, e);
+  }
+});
+
 router.delete("/citas-asesoria/:id", async (req, res) => {
   try {
     const [eventResult] = await callProcedure(
