@@ -50,6 +50,42 @@ router.get(
   }
 );
 
+router.get("/convocatorias/beneficiarios", async (req, res) => {
+  try {
+    const [result] =  await callProcedure(
+      req.user.username,
+      req.user.password,
+      "consultar_beneficiarios",
+      [req.query.solo_activos === undefined ? 0 : req.query.solo_activos]
+    );
+
+    res.json(result[0]);
+    
+  } catch (e) {
+    onErrorResponse(res,e);
+  }
+});
+
+router.get("/convocatorias/beneficiarios/:DNI", async (req, res) => {
+  try {
+    if(req.user.role === "estudiante" && req.user.username !== req.params.DNI){
+      return res.status(403).json({message: "Not allowed to query someone elses information."});
+    }
+
+    const [result] = await callProcedure(
+      req.user.username,
+      req.user.password,
+      "consultar_beneficios_estudiante",
+      [req.params.DNI]
+    );
+
+    res.json(result[0]);
+    
+  } catch (e) {
+    onErrorResponse(res,e);
+  }
+});
+
 router.get("/convocatorias/:con_id", async (req, res) => {
   try {
     const [result] = await callProcedure(
@@ -121,6 +157,22 @@ router.post("/convocatorias/:con_id/participaciones", async (req, res) => {
     res.status(201).json({ message: "Participation registered." });
   } catch (e) {
     onErrorResponse(res, e);
+  }
+});
+
+router.get("/convocatorias/:con_id/beneficiarios", async (req, res) => {
+  try {
+    const [result] = await callProcedure(
+      req.user.username,
+      req.user.password,
+      "consultar_beneficiarios_convocatoria",
+      [req.params.con_id]
+    );
+
+    res.json(result[0]);
+    
+  } catch (e) {
+    onErrorResponse(res,e);
   }
 });
 
