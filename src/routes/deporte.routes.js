@@ -1,7 +1,35 @@
 import { Router } from "express";
 import callProcedure from "../libs/callProcedure.js";
+import onErrorResponse from "../libs/onErrorResponse.js";
 
 const router = Router();
+
+router.get("/selecciones-deportivas", async (req, res) => {
+  try {
+    const [result] = await callProcedure(
+      req.user.username,
+      req.user.password,
+      "obtener_selecciones_deportivas"
+    );
+    res.json(result[0]);
+  } catch (e) {
+    onErrorResponse(res, e);
+  }
+});
+
+router.get("/selecciones-deportivas/:id", async (req, res) => {
+  try {
+    const [result] = await callProcedure(
+      req.user.username,
+      req.user.password,
+      "obtener_seleccion_deportiva",
+      [req.params.id]
+    );
+    res.json(result[0]);
+  } catch (e) {
+    onErrorResponse(res, e);
+  }
+});
 
 router.get("/convocatorias-selecciones", async (req, res) => {
   try {
@@ -12,21 +40,34 @@ router.get("/convocatorias-selecciones", async (req, res) => {
     );
     res.json(result);
   } catch (e) {
-    return res.status(500).json({ message: e.message });
+    onErrorResponse(res, e);
   }
 });
 
-router.get("/convocatorias-selecciones/:id", async (req, res) => {
+router.get("/selecciones-deportivas/entrenamientos/:id", async (req, res) => {
   try {
     const [result] = await callProcedure(
       req.user.username,
       req.user.password,
-      "obtener_convocatoria_selecciones_deportivas",
+      "obtener_entrenamientos_seleccion_deportiva",
       [req.params.id]
+    );
+    res.json(result[0]);
+  } catch (e) {
+    onErrorResponse(res, e);
+  }
+});
+
+router.get("/torneos", async (req, res) => {
+  try {
+    const [result] = await callProcedure(
+      req.user.username,
+      req.user.password,
+      "obtener_torneos"
     );
     res.json(result);
   } catch (e) {
-    return res.status(500).json({ message: e.message });
+    onErrorResponse(res, e);
   }
 });
 
